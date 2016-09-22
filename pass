@@ -1,0 +1,50 @@
+#!/usr/bin/python
+
+# Simple password salting/hashing/authenticating.
+
+import getpass, hashlib, uuid
+found = 1
+userfound = False 
+while found < 4:
+	F = open('passwords','a+')
+	data = F.read().splitlines()
+ 	
+	USER = raw_input("Username: ")
+	PASSWORD = getpass.getpass("Password: ")
+	foundpass = ""
+	foundsalt = ""
+	salt = uuid.uuid4().hex
+	stored_hash=hashlib.md5(PASSWORD + foundsalt).hexdigest()
+	hashed_password=hashlib.md5(PASSWORD + str(salt)).hexdigest()
+	hashed_nosalt = hashlib.md5(PASSWORD).hexdigest()
+	
+	for line in data:
+		names = line.split(':')
+		if USER == names[0]:
+			userfound=True
+			foundpass=names[1]
+			foundsalt=names[2]
+			stored_hash=hashlib.md5(PASSWORD + foundsalt).hexdigest()
+	
+	if not userfound:
+		F.write('\n')
+	        F.write(str(USER))
+	        F.write(str(":"))
+	        F.write(str(hashed_password))
+		F.write(str(":"))
+		F.write(str(salt))
+	        print "New user added!"
+	
+	else:
+		if stored_hash == foundpass:
+	                found=5
+			print " _____________________"
+			print "|                     |"
+			print "  Welcome, ", USER
+			print "|_____________________|"
+		else:
+			found=found+1
+			print "Incorrect. Try again:"
+		if found == 4:
+			print "Too many failed attempts. Goodbye."
+
