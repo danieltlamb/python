@@ -6,8 +6,6 @@ import operator
 
 ###  This script connects to the server which John Black set up for us to try to find the first 5 bytes of the "RC4 key."
 
-###  Currently it's spitting out the correct w0, however the rest are wrong.  I'm not sure where the problem is, but I know it's an easy fix once I figure it out.
-
 w0 = 0
 w1 = 0
 w2 = 0
@@ -16,8 +14,8 @@ w4 = 0
 
 ###  The sequence of numbers based on the pattern John Vennard and I discovered by running through the KSA with pen and paper at 8pm at Jake's while drinking Dale's Pale Ale:
 seq = [6,10,15,21,28]
-
-for k in range(0,5):
+print "Initializing...\n"
+for k in range(0,4):
    array = [0]*256
    for i in range(0,200):
 
@@ -27,7 +25,8 @@ for k in range(0,5):
          x_byte = "0" + y
       else:
          x_byte = y
-      iv = "03 ff " + x_byte + "\n"
+      whattheheckman = "0" + str(3 + k)
+      iv = whattheheckman + " ff " + x_byte + "\n"
       he = '0x'
       x = str(he) + str(x_byte)
 
@@ -52,20 +51,20 @@ for k in range(0,5):
    if k == 0:
       windex0, v0 = max(enumerate(array), key=operator.itemgetter(1))
       w0 = (w0 + windex0)
-      print "\n",str(hex(w0))
+      w0char = str(hex(w0))[2:].strip('\n')
+      print "Found w0"
    if k == 1:
       windex1, v1 = max(enumerate(array), key=operator.itemgetter(1))
       w1 = (w1 + windex1)
-      print "\n",str(hex(w1))
+      w1char = str(hex(w1))[2:].strip('\n')
+      print "Found w1"
    if k == 2:
       windex2, v2 = max(enumerate(array), key=operator.itemgetter(1))
       w2 = (w2 + windex2)
-      print "\n",str(hex(w2))
+      w2char = str(hex(w2))[2:].strip('\n')
+      print "Found w2"
    if k == 3:
       windex3, v3 = max(enumerate(array), key=operator.itemgetter(1))
       w3 = (w3 + windex3)
-      print "\n",str(hex(w3))
-   if k == 4:
-      windex4, v4 = max(enumerate(array), key=operator.itemgetter(1))
-      w4 = (w4 + windex4)
-      print "\n",str(hex(w4))
+      w3char = str(hex(w3))[2:].strip('\n')
+      print "Found w3\n\n" + str(w0char) + str(w1char) + " " + str(w2char) + str(w3char) + "\n"
