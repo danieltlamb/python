@@ -1,0 +1,71 @@
+#!/usr/bin/python
+
+import socket
+import time
+import operator
+
+###  This script connects to the server which John Black set up for us to try to find the first 5 bytes of the "RC4 key."
+
+###  Currently it's spitting out the correct w0, however the rest are wrong.  I'm not sure where the problem is, but I know it's an easy fix once I figure it out.
+
+w0 = 0
+w1 = 0
+w2 = 0
+w3 = 0
+w4 = 0
+
+###  The sequence of numbers based on the pattern John Vennard and I discovered by running through the KSA with pen and paper at 8pm at Jake's while drinking Dale's Pale Ale:
+seq = [6,10,15,21,28]
+
+for k in range(0,5):
+   array = [0]*256
+   for i in range(0,200):
+
+###  Crafting my bytes to send to server:
+      y = str(hex(i))[2:]
+      if i<16:
+         x_byte = "0" + y
+      else:
+         x_byte = y
+      iv = "03 ff " + x_byte + "\n"
+      he = '0x'
+      x = str(he) + str(x_byte)
+
+      host = '128.138.201.119'
+      port = 31416
+
+      s = socket.socket( socket.AF_INET, socket.SOCK_STREAM )   
+      s.connect( (host,port) )
+      s.send( iv )
+
+      raw = s.recv( 4 )
+      rawstrip = raw.strip('\n')    
+
+###  The Math:
+      data = ((int(rawstrip,16) ^ int(0xaa)) - (int(seq[k]) + (w0 + w1 + w2 + w3 + w4) + int(x,16)))%256
+
+###  Add instances to array: 
+      array[data] += 1
+      s.close()
+
+###  Performing the frequency analysis of data for each iteration of k range. I know this could definitely be more concise.
+   if k == 0:
+      windex0, v0 = max(enumerate(array), key=operator.itemgetter(1))
+      w0 = (w0 + windex0)
+      print "\n",str(hex(w0))
+   if k == 1:
+      windex1, v1 = max(enumerate(array), key=operator.itemgetter(1))
+      w1 = (w1 + windex1)
+      print "\n",str(hex(w1))
+   if k == 2:
+      windex2, v2 = max(enumerate(array), key=operator.itemgetter(1))
+      w2 = (w2 + windex2)
+      print "\n",str(hex(w2))
+   if k == 3:
+      windex3, v3 = max(enumerate(array), key=operator.itemgetter(1))
+      w3 = (w3 + windex3)
+      print "\n",str(hex(w3))
+   if k == 4:
+      windex4, v4 = max(enumerate(array), key=operator.itemgetter(1))
+      w4 = (w4 + windex4)
+      print "\n",str(hex(w4))
