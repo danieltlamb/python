@@ -1,0 +1,25 @@
+#!/usr/bin/python
+#Daniel Lamb
+
+import os
+import sys
+import stat
+
+def Main():
+
+   for dirpath, dirnames, filenames in os.walk("/"):
+
+     # print dirpath, dirnames, filenames
+      for names in filenames:
+         filepath = os.path.join(dirpath, names)
+         try:
+            modes = os.stat(filepath).st_mode
+         except:
+            pass
+         if stat.S_ISUID & modes:
+            print "SUID: ", dirpath.strip(),"/",names.strip()," - ", modes
+         if stat.S_IWOTH & modes:
+            print "World Writable: ", dirpath.strip(),"/",names.strip()," - ", modes
+
+if __name__ == "__main__":
+   Main()

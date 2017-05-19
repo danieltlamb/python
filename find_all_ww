@@ -1,0 +1,68 @@
+#!/usr/bin/python
+#Daniel Lamb
+
+import os, sys
+
+path="/usr/local/bin"
+
+
+def ListDir2(path):
+
+   list=os.listdir(path)
+
+   for fn in list:
+
+      fstat=os.stat(path +"/"+ fn)
+      uid=oct(fstat.st_mode)# & 00777)
+      data=str((fn,":",uid))
+      dataww=uid[6]
+      dataout=uid[3]
+      if "4" in dataout:
+         print"---------- SUID Set:",fn,":",uid
+      elif "7" in dataww:
+         print"---------- World Writable:",fn,":",uid
+      elif "3" in dataww:
+         print"---------- World Writable:",fn,":",uid
+      elif "2" in dataww:
+         print"---------- World Writable:",fn,":",uid
+      elif "6" in dataww:
+         print"---------- World Writable: ",fn,":",uid
+      if "4" in uid[1]:
+         ListDir2("/"+ fn)
+
+
+
+def ListDir(path):
+
+   list=os.listdir(path)
+
+   print 'Main Directory:', path
+
+   for fn in list:
+
+ 
+      fstat=os.stat(path +"/"+ fn)
+      uid=oct(fstat.st_mode)# & 00777)
+      data=str((fn,":",uid))
+      dataww=uid[6]
+      dataout=uid[3]
+      if "4" in dataout:
+         print"SUID Set:",path, fn,":",uid
+      elif "7" in dataww:
+         print "World Writable:",path,fn,":",uid
+      elif "3" in dataww:
+         print "World Writable:",path,fn,":",uid
+      elif "2" in dataww:
+         print "World Writable:",path,fn,":",uid
+      elif "6" in dataww:
+         print "World Writable:",path,fn,":",uid
+      if "4" in uid[1]:
+            ListDir2(path +"/"+ fn)
+
+         
+def Main():
+   ListDir(path)
+#   GetFnStat(fn)
+
+if __name__ == "__main__":
+	Main()
