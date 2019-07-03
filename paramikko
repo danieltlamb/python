@@ -1,0 +1,18 @@
+#!/usr/bin/python
+
+import paramiko
+import getpass
+
+name = raw_input("Username: ")
+passwd = getpass.getpass("Password: ")
+
+ssh = paramiko.SSHClient()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+ssh.connect('IP_ADDRESS_HERE', username=name, password = passwd)
+
+a,b,c = ssh.exec_command('ls')
+
+print "Stdin: ", a
+print "Stdout: ", b
+print "Stderr: ", c
+

@@ -1,0 +1,21 @@
+#!/usr/bin/python
+
+# This script will run a shell
+
+import os
+import subprocess
+import sys
+
+# While 1:
+# Accept some input from the user
+# Variable: cmd (cmd should be a string)
+while 1:
+   cmd = raw_input("||")
+   subprocess.call(cmd, shell=True)
+
+done
+
+
+# Then... we want our script to execute that command
+
+# End of script... put it all in a loop
